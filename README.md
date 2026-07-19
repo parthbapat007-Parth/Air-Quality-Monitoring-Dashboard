@@ -26,8 +26,7 @@ Wind Speed
 The system also provides historical trends through interactive charts, enabling users to understand environmental conditions over time. This project promotes environmental awareness by presenting complex pollution data through an intuitive and user-friendly interface. This aligns with the overview and objectives described in your project report.
 
 <h2>Features</h2>h2>
-
-a) Search any city
+<li>a) Search any city
 b) Detect Current Location
 c) Real-time Weather
 d) Air Quality Monitoring
@@ -40,6 +39,7 @@ j) SO₂ Monitoring
 k) O₃ Monitoring
 l) Interactive Charts
 m) Responsive Design
+</li>
 
 <h2>Technologies Used</h2>
 Frontend
