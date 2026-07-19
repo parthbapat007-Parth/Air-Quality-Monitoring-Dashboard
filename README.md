@@ -15,12 +15,12 @@ The system utilizes JavaScript Geolocation API to determine the user's latitude 
 <li>PM2.5</li>
 <li>PM10</li>
 <li>Carbon Monoxide (CO)</li>
-Nitrogen Dioxide (NO₂)
-Sulfur Dioxide (SO₂)
-Ozone (O₃)
-Temperature
-Humidity
-Wind Speed
+<li>Nitrogen Dioxide (NO₂)</li>
+<li>Sulfur Dioxide (SO₂)</li>
+<li>Ozone (O₃)</li>
+<li>Temperature</li>
+<li>Humidity</li>
+<li>Wind Speed</li>
 </ol>
 
 The system also provides historical trends through interactive charts, enabling users to understand environmental conditions over time. This project promotes environmental awareness by presenting complex pollution data through an intuitive and user-friendly interface. This aligns with the overview and objectives described in your project report.
