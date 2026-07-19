@@ -39,15 +39,17 @@ The system also provides historical trends through interactive charts, enabling 
 </ol>
 
 <h2>Technologies Used</h2>
-Frontend
-HTML5
-CSS3
-JavaScript
-Chart.js
-Backend
-Python
-Flask
-APIs
-Weather API
-Air Quality API
-Browser Geolocation API
+<ol>
+<ul>Frontend</ul>
+<ul>HTML5</ul>
+<ul>CSS3</ul>
+<ul>JavaScript</ul>
+<ul>Chart.js</ul>
+<ul>Backend</ul>
+<ul>Python</ul>
+<ul>Flask</ul>
+<ul>APIs</ul>
+<ul>Weather API</ul>
+<ul>Air Quality API</ul>
+<ul>Browser Geolocation API</ul>
+</ol>
