@@ -10,10 +10,11 @@ The application automatically detects the user's location using the browser Geol
 Air pollution has become a major global concern affecting human health, the environment, and climate. This project provides a web-based Air Quality Monitoring Dashboard that enables users to monitor real-time environmental conditions.
 
 The system utilizes JavaScript Geolocation API to determine the user's latitude and longitude and communicates with a Flask backend, which securely fetches data from external Weather and AQI APIs. The dashboard displays important environmental parameters including:
-<ol>Air Quality Index (AQI)
-PM2.5
-PM10
-Carbon Monoxide (CO)
+<ol>
+  <li>Air Quality Index (AQI)</li>
+<li>PM2.5</li>
+<li>PM10</li>
+<li>Carbon Monoxide (CO)</li>
 Nitrogen Dioxide (NO₂)
 Sulfur Dioxide (SO₂)
 Ozone (O₃)
