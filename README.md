@@ -39,7 +39,7 @@ The system also provides historical trends through interactive charts, enabling 
 </ol>
 
 <h2>Technologies Used</h2>
-<ol>
+<dl>
 <dt>Frontend</dt>
 <dd>HTML5</dd>
 <dd>CSS3</dd>
@@ -52,4 +52,4 @@ The system also provides historical trends through interactive charts, enabling 
 <dd>Weather API</dd>
 <dd>Air Quality API</dd>
 <dd>Browser Geolocation API</dd>
-</ol>
+</dl>
