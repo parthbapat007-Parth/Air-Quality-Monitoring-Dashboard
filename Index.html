@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Air Quality & Weather Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-gradient: radial-gradient(circle at top left, #1d4ed8, #0f172a 50%, #020617);
+      --card-bg: rgba(15, 23, 42, 0.8);
+      --card-border: rgba(148, 163, 184, 0.3);
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --accent: #38bdf8;
+      --accent-strong: #0ea5e9;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Poppins", Arial, sans-serif;
+      background: var(--bg-gradient);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--text-main);
+    }
+
+    header {
+      text-align: center;
+      padding: 24px 16px 10px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.9rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    header p {
+      margin: 8px 0 0;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    .outer-wrapper {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      padding: 10px 16px 30px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1100px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 18px;
+      padding: 18px 18px 20px;
+      margin-bottom: 18px;
+      box-shadow: 0 18px 45px rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(18px);
+    }
+
+    .card h2,
+    .card h3,
+    .card h4 {
+      margin-top: 0;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .top-card-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .top-card-title span.icon-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent-strong);
+      box-shadow: 0 0 8px var(--accent-strong);
+    }
+
+    .search-box {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .search-box input {
+      flex: 1 1 220px;
+      padding: 10px 12px;
+      font-size: 15px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.6);
+      color: var(--text-main);
+      outline: none;
+      transition: border 0.2s, box-shadow 0.2s, background 0.2s;
+    }
+
+    .search-box input::placeholder {
+      color: #6b7280;
+    }
+
+    .search-box input:focus {
+      border-color: var(--accent-strong);
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.6);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    button {
+      padding: 10px 18px;
+      font-size: 14px;
+      cursor: pointer;
+      border: none;
+      border-radius: 999px;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.15s ease;
+      white-space: nowrap;
+    }
+
+    #searchBtn {
+      background: linear-gradient(to right, #2563eb, #38bdf8);
+      color: #f9fafb;
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.5);
+    }
+
+    #locBtn {
+      background: linear-gradient(to right, #16a34a, #22c55e);
+      color: #f9fafb;
+      box-shadow: 0 8px 20px rgba(22, 163, 74, 0.55);
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.6);
+    }
+
+    button:active {
+      transform: translateY(0);
+      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.8);
+    }
+
+    #status {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      min-height: 18px;
+    }
+
+    .status-strong {
+      color: var(--accent);
+    }
+
+    .error {
+      color: #fb7185;
+      font-weight: 400;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: 18px;
+      margin-top: 8px;
+      margin-bottom: 18px;
+    }
+
+    @media (max-width: 900px) {
+      .cards-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .weather-main {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .weather-left h2 {
+      font-size: 1.2rem;
+      margin-bottom: 4px;
+    }
+
+    .weather-left p {
+      margin: 2px 0;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .weather-temp {
+      text-align: right;
+    }
+
+    .weather-temp-main {
+      font-size: 2.1rem;
+      font-weight: 600;
+    }
+
+    .weather-temp-sub {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .weather-extra {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 20px;
+      color: var(--text-muted);
+    }
+
+    .weather-icon {
+      width: 54px;
+      height: 54px;
+      flex-shrink: 0;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      color: var(--text-muted);
+    }
+
+    .chip-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .aq-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(86px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+      font-size: 0.85rem;
+    }
+
+    .aq-item {
+      padding: 8px 9px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(75, 85, 99, 0.8);
+    }
+
+    .aq-item-label {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+    }
+
+    .aq-item-value {
+      margin-top: 3px;
+      font-weight: 500;
+      font-size: 0.93rem;
+    }
+
+    .aqi-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 10px;
+      border-radius: 999px;
+      color: #f9fafb;
+      font-size: 0.78rem;
+      margin-top: 10px;
+      gap: 6px;
+    }
+
+    .aqi-badge span.dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #fff;
+    }
+
+    .good    { background: linear-gradient(to right, #22c55e, #4ade80); }
+    .moderate{ background: linear-gradient(to right, #eab308, #fde047); color: #111827; }
+    .usg     { background: linear-gradient(to right, #f97316, #fb923c); }
+    .unhealthy{ background: linear-gradient(to right, #ef4444, #fb7185); }
+    .very-unhealthy { background: linear-gradient(to right, #8b5cf6, #a855f7); }
+
+    canvas {
+      width: 100%;
+      max-height: 280px;
+    }
+
+    #chartsSubtitle {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: -2px;
+      margin-bottom: 10px;
+    }
+
+    #aqNote {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Air Quality & Weather Dashboard</h1>
+    <p>Beautiful, real-time insights for your city or current location</p>
+  </header>
+
+  <div class="outer-wrapper">
+    <div class="container">
+      <div class="card">
+        <div class="top-card-title">
+          <span class="icon-dot"></span>
+          <h3 style="margin:0;">Search Location</h3>
+        </div>
+        <div class="search-box">
+          <input id="cityInput" type="text" placeholder="Enter city name (e.g. Pune, Mumbai, Delhi)" />
+          <button id="searchBtn">Search</button>
+          <button id="locBtn">Use My Location</button>
+        </div>
+        <div id="status"></div>
+      </div>
+
+      <div class="cards-grid">
+        <div id="weatherCard" class="card" style="display:none;"></div>
+        <div id="airCard" class="card" style="display:none;"></div>
+      </div>
+
+      <div id="chartsCard" class="card" style="display:none;">
+        <div class="top-card-title">
+          <span class="icon-dot"></span>
+          <h3 style="margin:0;">Past 3 Days Trends</h3>
+        </div>
+        <p id="chartsSubtitle"></p>
+        <h4>Average Temperature (°C)</h4>
+        <canvas id="tempChart"></canvas>
+        <h4 style="margin-top: 18px;">Average PM2.5</h4>
+        <canvas id="pm25Chart"></canvas>
+        <p id="aqNote"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    const API_KEY = "YOUR_API_KEY"; // <-- put your WeatherAPI key here
+
+    const cityInput = document.getElementById('cityInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const locBtn = document.getElementById('locBtn');
+    const statusDiv = document.getElementById('status');
+    const weatherCard = document.getElementById('weatherCard');
+    const airCard = document.getElementById('airCard');
+    const chartsCard = document.getElementById('chartsCard');
+    const chartsSubtitle = document.getElementById('chartsSubtitle');
+    const aqNote = document.getElementById('aqNote');
+
+    let tempChartInstance = null;
+    let pm25ChartInstance = null;
+
+    function setStatus(message, isError = false, strong = false) {
+      if (!message) {
+        statusDiv.textContent = "";
+        return;
+      }
+      statusDiv.innerHTML = `<span class="${isError ? "error" : (strong ? "status-strong" : "")}">${message}</span>`;
+    }
+
+    function getAqiCategory(pm25) {
+      if (pm25 <= 12) return {label: "Good", className: "good"};
+      if (pm25 <= 35.4) return {label: "Moderate", className: "moderate"};
+      if (pm25 <= 55.4) return {label: "Unhealthy for Sensitive Groups", className: "usg"};
+      if (pm25 <= 150.4) return {label: "Unhealthy", className: "unhealthy"};
+      return {label: "Very Unhealthy", className: "very-unhealthy"};
+    }
+
+    function formatDate(date) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, '0');
+      const d = String(date.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
+    async function fetchByQuery(query) {
+      setStatus("Loading current data...", false, true);
+      weatherCard.style.display = "none";
+      airCard.style.display = "none";
+      chartsCard.style.display = "none";
+
+      const url = `https://api.weatherapi.com/v1/current.json?key=${API_KEY}&q=${encodeURIComponent(query)}&aqi=yes`;
+
+      try {
+        const res = await fetch(url);
+        if (!res.ok) {
+          throw new Error("API request failed");
+        }
+        const data = await res.json();
+
+        setStatus("");
+
+        const location = data.location;
+        const current = data.current;
+
+        // WEATHER CARD
+        const iconUrl = current.condition.icon ? `https:${current.condition.icon}` : "";
+        weatherCard.innerHTML = `
+          <div class="top-card-title" style="margin-bottom:14px;">
+            <span class="icon-dot"></span>
+            <h3 style="margin:0;">Current Weather</h3>
+          </div>
+          <div class="weather-main">
+            <div class="weather-left">
+              <h2>${location.name}, ${location.country}</h2>
+              <p>Local time: ${location.localtime}</p>
+              <div class="chip">
+                <span class="chip-dot"></span>
+                <span>${current.condition.text}</span>
+              </div>
+            </div>
+            <div class="weather-temp">
+              <div class="weather-temp-main">${current.temp_c}°C</div>
+              <div class="weather-temp-sub">${current.temp_f}°F</div>
+              ${iconUrl ? `<img src="${iconUrl}" alt="Weather icon" class="weather-icon" />` : ""}
+            </div>
+          </div>
+          <div class="weather-extra">
+            <span>Humidity: <strong>${current.humidity}%</strong></span>
+            <span>Wind: <strong>${current.wind_kph} kph</strong></span>
+            <span>Feels like: <strong>${current.feelslike_c}°C</strong></span>
+            <span>Pressure: <strong>${current.pressure_mb} mb</strong></span>
+          </div>
+        `;
+        weatherCard.style.display = "block";
+
+        // AIR QUALITY CARD
+        const aq = current.air_quality || {};
+        const pm25 = aq.pm2_5 || 0;
+        const cat = getAqiCategory(pm25);
+
+        airCard.innerHTML = `
+          <div class="top-card-title" style="margin-bottom:14px;">
+            <span class="icon-dot"></span>
+            <h3 style="margin:0;">Air Quality (Current)</h3>
+          </div>
+          <div class="aq-grid">
+            <div class="aq-item">
+              <div class="aq-item-label">PM2.5</div>
+              <div class="aq-item-value">${pm25.toFixed(2)}</div>
+            </div>
+            <div class="aq-item">
+              <div class="aq-item-label">PM10</div>
+              <div class="aq-item-value">${(aq.pm10 || 0).toFixed(2)}</div>
+            </div>
+            <div class="aq-item">
+              <div class="aq-item-label">O₃</div>
+              <div class="aq-item-value">${(aq.o3 || 0).toFixed(2)}</div>
+            </div>
+            <div class="aq-item">
+              <div class="aq-item-label">NO₂</div>
+              <div class="aq-item-value">${(aq.no2 || 0).toFixed(2)}</div>
+            </div>
+            <div class="aq-item">
+              <div class="aq-item-label">SO₂</div>
+              <div class="aq-item-value">${(aq.so2 || 0).toFixed(2)}</div>
+            </div>
+            <div class="aq-item">
+              <div class="aq-item-label">CO</div>
+              <div class="aq-item-value">${(aq.co || 0).toFixed(2)}</div>
+            </div>
+          </div>
+          <div class="aqi-badge ${cat.className}">
+            <span class="dot"></span>
+            <span>${cat.label}</span>
+          </div>
+        `;
+        airCard.style.display = "block";
+
+        // Fetch past data for graphs (last 3 days)
+        const locQuery = `${location.lat},${location.lon}`;
+        await fetchHistoryAndPlot(locQuery, location.name, location.country);
+
+      } catch (err) {
+        console.error(err);
+        setStatus("Error fetching data. Check city name, location permission, or API key.", true);
+      }
+    }
+
+    async function fetchHistoryAndPlot(query, cityName, country) {
+      setStatus("Loading past data...", false, true);
+
+      const endDate = new Date();
+      const startDate = new Date();
+      startDate.setDate(endDate.getDate() - 2); // last 3 days including today
+
+      const startStr = formatDate(startDate);
+      const endStr = formatDate(endDate);
+
+      const url = `https://api.weatherapi.com/v1/history.json?key=${API_KEY}&q=${encodeURIComponent(query)}&dt=${startStr}&end_dt=${endStr}&aqi=yes`;
+
+      try {
+        const res = await fetch(url);
+        if (!res.ok) {
+          throw new Error("History API request failed");
+        }
+        const data = await res.json();
+
+        const days = (data.forecast && data.forecast.forecastday) ? data.forecast.forecastday : [];
+
+        const labels = [];
+        const tempValues = [];
+        const pm25Values = [];
+        let pm25Any = false;
+
+        days.forEach(day => {
+          labels.push(day.date);
+          tempValues.push(day.day.avgtemp_c);
+
+          let sumPm = 0;
+          let countPm = 0;
+          if (day.hour) {
+            day.hour.forEach(h => {
+              if (h.air_quality && h.air_quality.pm2_5 != null) {
+                sumPm += h.air_quality.pm2_5;
+                countPm++;
+              }
+            });
+          }
+          if (countPm > 0) {
+            pm25Values.push(sumPm / countPm);
+            pm25Any = true;
+          } else {
+            pm25Values.push(null);
+          }
+        });
+
+        chartsSubtitle.textContent = `Location: ${cityName}, ${country} • From ${labels[0]} to ${labels[labels.length - 1]}`;
+        aqNote.textContent = pm25Any ? "" : "PM2.5 historical values might not be available for this plan/location.";
+
+        const tempCtx = document.getElementById('tempChart').getContext('2d');
+        const pm25Ctx = document.getElementById('pm25Chart').getContext('2d');
+
+        if (tempChartInstance) tempChartInstance.destroy();
+        if (pm25ChartInstance) pm25ChartInstance.destroy();
+
+        tempChartInstance = new Chart(tempCtx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Avg Temp (°C)',
+              data: tempValues,
+              fill: false,
+              borderWidth: 2,
+              tension: 0.35
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { display: true }
+            },
+            scales: {
+              x: { title: { display: true, text: 'Date' } },
+              y: { title: { display: true, text: 'Temperature (°C)' } }
+            }
+          }
+        });
+
+        pm25ChartInstance = new Chart(pm25Ctx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Avg PM2.5',
+              data: pm25Values,
+              spanGaps: true,
+              fill: false,
+              borderWidth: 2,
+              tension: 0.35
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { display: true }
+            },
+            scales: {
+              x: { title: { display: true, text: 'Date' } },
+              y: { title: { display: true, text: 'PM2.5' } }
+            }
+          }
+        });
+
+        chartsCard.style.display = "block";
+        setStatus("");
+
+      } catch (err) {
+        console.error(err);
+        setStatus("Could not load historical data (maybe plan limit). Current data shown only.", true);
+      }
+    }
+
+    function fetchByCity() {
+      const city = cityInput.value.trim();
+      if (!city) {
+        setStatus("Please enter a city name.", true);
+        return;
+      }
+      fetchByQuery(city);
+    }
+
+    function fetchByLocation() {
+      if (!("geolocation" in navigator)) {
+        setStatus("Geolocation is not supported in this browser.", true);
+        return;
+      }
+
+      setStatus("Getting your location...", false, true);
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          const query = `${lat},${lon}`;
+          fetchByQuery(query);
+        },
+        (error) => {
+          console.error(error);
+          let msg = "Failed to get location.";
+          if (error.code === error.PERMISSION_DENIED) {
+            msg = "Location permission denied. Please allow location access or search by city.";
+          }
+          setStatus(msg, true);
+        }
+      );
+    }
+
+    searchBtn.addEventListener('click', fetchByCity);
+    locBtn.addEventListener('click', fetchByLocation);
+    cityInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') fetchByCity();
+    });
+  </script>
+</body>
+</html>
