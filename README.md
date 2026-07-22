@@ -297,23 +297,6 @@ Display Environmental Data
 
 ---
 
-## API Response Processing
-
-After receiving the JSON response from the WAQI API, the Flask backend extracts only the required information before sending it to the frontend.
-
-The dashboard displays:
-
-- Air Quality Index (AQI)
-- PM2.5
-- PM10
-- Carbon Dioxide (CO₂)
-- Temperature
-- Humidity
-- Weather Information
-
-This approach keeps the frontend lightweight while maintaining secure API communication.
-
----
 
 # Installation Guide
 
@@ -533,20 +516,6 @@ This project was developed as a **Third Year B.Sc. Computer Science Group Projec
 | Bhushan Kadam |
 | Nayna Ambekar |
 | Payal Kasar |
-
----
-
-# Acknowledgements
-
-We would like to express our sincere gratitude to everyone who supported us throughout the development of this project.
-
-Special thanks to:
-
-- Our project guide for continuous guidance and valuable suggestions.
-- The Department of Computer Science for providing the opportunity to work on this project.
-- The World Air Quality Index (WAQI) project for providing access to real-time environmental data.
-- The Flask and Python communities for their excellent documentation and open-source resources.
-- GitHub for providing an efficient platform for version control and collaboration.
 
 ---
 
